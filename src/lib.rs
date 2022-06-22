@@ -1,4 +1,4 @@
 pub mod kvs;
+pub mod error;
 
-use kvs::KvStore;
 

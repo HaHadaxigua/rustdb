@@ -1,8 +1,14 @@
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
+use std::path::PathBuf;
 
 #[derive(Default)] // will fill default value
 pub struct KvStore {
-    map: HashMap<String, String>,
+    // directory for log and other data
+    path: PathBuf,
+    readers: HashMap<u64, ()>,
+    writer: (),
+    index: BTreeMap<String, CommandPos>,
+    uncompacted: u64,
 }
 
 impl KvStore {
