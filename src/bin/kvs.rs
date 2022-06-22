@@ -33,15 +33,18 @@ fn main() {
 
     match matches.subcommand() {
         Some(("set", args)) => {
-            println!("{}", args.get_one::<String>("KEY").unwrap());
+            // println!("{}", args.get_one::<String>("KEY").unwrap());
+            eprintln!("unimplemented");
             exit(1);
         }
         Some(("get", args)) => {
-            println!("{}", args.get_one::<String>("KEY").unwrap());
+            // println!("{}", args.get_one::<String>("KEY").unwrap());
+            eprintln!("unimplemented");
             exit(1);
         }
         Some(("rm", args)) => {
-            println!("{}", args.get_one::<String>("KEY").unwrap());
+            // println!("{}", args.get_one::<String>("KEY").unwrap());
+            eprintln!("unimplemented");
             exit(1);
         }
         _ => unreachable!(),
