@@ -1,7 +1,11 @@
 use clap::{App, AppSettings, Arg, SubCommand};
 use std::process::exit;
+use std::env::current_dir;
 
-fn main() {
+use rustdb::kvs::KvStore;
+use rustdb::error::{Result, KvsError};
+
+fn main() -> Result<()> {
     let matches = App::new(env!("CARGO_PKG_NAME"))
         .version(env!("CARGO_PKG_VERSION"))
         .author(env!("CARGO_PKG_AUTHORS"))
@@ -33,20 +37,36 @@ fn main() {
 
     match matches.subcommand() {
         Some(("set", args)) => {
-            // println!("{}", args.get_one::<String>("KEY").unwrap());
-            eprintln!("unimplemented");
-            exit(1);
+            let key = args.value_of("KEY").unwrap();
+            let value = args.value_of("VALUE").unwrap();
+
+            let mut store = KvStore::open(current_dir()?)?;
+            store.set(key.to_string(), value.to_string())?;
         }
         Some(("get", args)) => {
-            // println!("{}", args.get_one::<String>("KEY").unwrap());
-            eprintln!("unimplemented");
-            exit(1);
+            let key = args.value_of("KEY").unwrap();
+
+            let mut store = KvStore::open(current_dir()?)?;
+            if let Some(value) = store.get(key.to_string())? {
+                println!("{}", value);
+            } else {
+                println!("Key not found");
+            }
         }
         Some(("rm", args)) => {
-            // println!("{}", args.get_one::<String>("KEY").unwrap());
-            eprintln!("unimplemented");
-            exit(1);
+            let key = args.value_of("KEY").unwrap();
+
+            let mut store = KvStore::open(current_dir()?)?;
+            match store.remove(key.to_string()) {
+                Ok(()) => {}
+                Err(KvsError::KeyNotFound) => {
+                    println!("Key not found");
+                    exit(1);
+                }
+                Err(e) => return Err(e),
+            }
         }
         _ => unreachable!(),
     };
+    Ok(())
 }
