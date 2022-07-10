@@ -1,12 +1,11 @@
-use std::process::Command;
-use std::thread;
 use std::fs::{self, File};
+use std::process::Command;
 use std::sync::mpsc;
+use std::thread;
 use std::time::Duration;
 
-
-use rustdb::kvs::KvStore;
 use rustdb::error::Result;
+use rustdb::kvs::KvStore;
 
 use assert_cmd::prelude::*;
 use predicates::ord::eq;
@@ -14,7 +13,6 @@ use predicates::str::{contains, is_empty, PredicateStrExt};
 use serde::__private::ser::constrain;
 use tempfile::TempDir;
 use walkdir::WalkDir;
-
 
 #[test]
 fn client_cli_no_args() {
@@ -126,7 +124,6 @@ fn client_cli_invalid_rm() {
         .failure();
 }
 
-
 #[test]
 fn client_cli_invalid_subcommand() {
     let temp_dir = TempDir::new().unwrap();
@@ -223,7 +220,7 @@ fn cli_access_server(engine: &str, addr: &str) {
     let mut server = Command::cargo_bin("kvs-server").unwrap();
     let mut child = server
         .args(&["--engine", engine, "--addr", addr])
-        .current_dir(temp_dir)
+        .current_dir(&temp_dir)
         .spawn()
         .unwrap();
     let handle = thread::spawn(move || {
@@ -313,7 +310,7 @@ fn cli_access_server(engine: &str, addr: &str) {
     });
     thread::sleep(Duration::from_secs(1));
 
-    Command::cargo_bin("kvs-client")
+    Command::cargo_bin("kvs-client"C)
         .unwrap()
         .args(&["get", "key2", "--addr", addr])
         .current_dir(&temp_dir)

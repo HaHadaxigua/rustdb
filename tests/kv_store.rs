@@ -1,5 +1,5 @@
-use rustdb::kvs::KvStore;
 use rustdb::error::Result;
+use rustdb::kvs::KvStore;
 use tempfile::TempDir;
 use walkdir::WalkDir;
 
@@ -41,7 +41,6 @@ fn overwrite_value() -> Result<()> {
 
     Ok(())
 }
-
 
 // Should get `None` when getting a non-existent key
 #[test]
@@ -87,7 +86,7 @@ fn compaction() -> Result<()> {
         let entries = WalkDir::new(temp_dir.path()).into_iter();
         let len: walkdir::Result<u64> = entries
             .map(|res| {
-                res.and_then(|entry|entry.metadata())
+                res.and_then(|entry| entry.metadata())
                     .map(|metdata| metdata.len())
             })
             .sum();
