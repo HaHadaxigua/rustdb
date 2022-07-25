@@ -2,7 +2,7 @@ use clap::{App, AppSettings, Arg, SubCommand};
 use std::process::exit;
 use std::env::current_dir;
 
-use rustdb::kvs::KvStore;
+use rustdb::engines::KvStore;
 use rustdb::error::{Result, KvsError};
 
 fn main() -> Result<()> {
