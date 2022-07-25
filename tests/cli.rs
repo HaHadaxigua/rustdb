@@ -310,7 +310,7 @@ fn cli_access_server(engine: &str, addr: &str) {
     });
     thread::sleep(Duration::from_secs(1));
 
-    Command::cargo_bin("kvs-client"C)
+    Command::cargo_bin("kvs-client")
         .unwrap()
         .args(&["get", "key2", "--addr", addr])
         .current_dir(&temp_dir)
