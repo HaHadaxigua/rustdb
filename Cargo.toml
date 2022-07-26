@@ -22,7 +22,7 @@ clap = "3.2.6"
 sled = "0.34.7"
 log = "0.4.0"
 env_logger = "0.8.4"
-structopt = { version = "0.3", default-features = false }
+structopt = "0.3"
 
 
 [dev-dependencies]

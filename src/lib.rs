@@ -1,6 +1,6 @@
 pub mod engines;
 pub mod error;
-mod server;
+pub mod server;
 mod common;
 mod client;
 

@@ -5,6 +5,7 @@ use crate::{engines, KvsError,
             common::{Request, SetResponse, GetResponse, RemoveResponse}};
 use engines::{KvsEngine, KvStore};
 use std::net::{TcpListener, TcpStream, ToSocketAddrs};
+use log::{debug, error};
 use serde_json::Deserializer;
 
 pub struct KvsServer<E: KvsEngine> {
@@ -29,20 +30,17 @@ impl<E: KvsEngine> KvsServer<E> {
 
     fn serve(&mut self, tcp: TcpStream) -> Result<()> {
         let peer_addr = tcp.peer_addr()?;
-        let reader = BufReader::new(&tcp)?;
-        let mut writer = BufWriter::new(&tcp);
-        let req_reader = Deserializer::from_reader(reader)
-            .into_iter::<Request>();
+        let reader = BufReader::new(&tcp);
+        let mut writer = BufWriter::new(tcp);
+        let req_reader = Deserializer::from_reader(reader).into_iter::<Request>();
 
         macro_rules! send_resp {
-            ($resp:expr) => {
-                {
-                    let resp = $resp;
-                    serde_json::to_writer(&mut writer, &resp)?;
-                    writer.flush()?;
-                    debug!("Response sent to {}: {:?}", peer_addr, resp);
-                };
-            };
+            ($resp:expr) => {{
+                let resp = $resp;
+                serde_json::to_writer(&mut writer, &resp)?;
+                writer.flush()?;
+                debug!("Response sent to {}: {:?}", peer_addr, resp);
+            };};
         }
 
         for req in req_reader {
@@ -61,7 +59,7 @@ impl<E: KvsEngine> KvsServer<E> {
                     Ok(_) => RemoveResponse::Ok(()),
                     Err(e) => RemoveResponse::Err(format!("{}", e)),
                 }),
-            }
+            };
         }
         Ok(())
     }
